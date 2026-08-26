@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Avaliação de Interface — Busca do Spotify | IHC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF1F4;
+  --ink:#16202A;
+  --ink-soft:#55636F;
+  --rule:#C9D2DA;
+  --indigo:#2E2BC4;
+  --amber:#B87514;
+  --amber-bg:#FDF3DF;
+  --white:#FFFFFF;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,serif;font-size:17px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 24px}
+h1,h2,h3,.eyebrow,th,.mono,.num{font-family:"Archivo",system-ui,sans-serif}
+.mono,.num,code{font-family:"JetBrains Mono",monospace}
+a{color:var(--indigo)}
+:focus-visible{outline:3px solid var(--indigo);outline-offset:3px}
+
+.ex{background:var(--amber-bg);border-bottom:2px dashed var(--amber);color:var(--amber);font-weight:600;padding:0 3px;border-radius:2px}
+.banner{background:#E9EEF7;border:1px solid #C4D0E3;color:#2B3A55;padding:18px 22px;margin:32px 0;border-radius:4px;font-size:15px;line-height:1.55}
+.banner strong{font-family:"Archivo",sans-serif;display:block;margin-bottom:6px;color:var(--indigo)}
+
+header{background:var(--ink);color:var(--paper);padding:64px 0 56px;margin-bottom:8px}
+header .eyebrow{color:#8FA3B4}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--ink-soft);margin:0 0 14px}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.02;font-weight:800;letter-spacing:-.02em;margin:0 0 20px}
+header p.sub{font-size:19px;color:#B9C7D3;margin:0 0 36px;max-width:52ch}
+.meta{display:flex;flex-wrap:wrap;gap:32px;border-top:1px solid #33414E;padding-top:24px}
+.meta div{font-family:"JetBrains Mono",monospace;font-size:13px;color:#8FA3B4;line-height:1.8}
+.meta span{display:block;color:var(--paper);font-size:14px}
+
+section{padding:52px 0;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:none}
+h2{font-size:clamp(24px,3.4vw,34px);font-weight:700;letter-spacing:-.015em;margin:0 0 8px;line-height:1.15}
+h3{font-size:18px;font-weight:700;margin:34px 0 10px;letter-spacing:-.01em}
+p{margin:0 0 16px}
+ul{margin:0 0 16px;padding-left:20px}
+li{margin-bottom:7px}
+.lead{font-size:19px;color:var(--ink-soft);margin-bottom:28px;max-width:60ch}
+
+.card{background:var(--white);border:1px solid var(--rule);border-radius:4px;padding:26px 28px;margin:22px 0}
+.card h3{margin-top:0}
+.quote{border-left:3px solid var(--indigo);padding:2px 0 2px 18px;margin:16px 0;font-style:italic;color:var(--ink-soft)}
+.quote cite{display:block;font-style:normal;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--indigo);margin-top:4px}
+
+.gauge{margin:26px 0 34px}
+.gauge-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.gauge-label{font-family:"Archivo",sans-serif;font-weight:600;font-size:15px}
+.gauge-val{font-family:"JetBrains Mono",monospace;font-size:22px;font-weight:600;color:var(--indigo)}
+.rule{position:relative;height:46px;background:var(--white);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+.ticks{position:absolute;inset:0;display:flex}
+.ticks i{flex:1;border-right:1px solid var(--rule)}
+.fill{position:absolute;left:0;top:0;bottom:0;background:var(--indigo);opacity:.14}
+.needle{position:absolute;top:-1px;bottom:-1px;width:3px;background:var(--indigo)}
+.threshold{position:absolute;top:0;bottom:0;width:2px;background:var(--amber)}
+.gauge-foot{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-soft);margin-top:6px}
+
+.scroll{overflow-x:auto;margin:20px 0}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--white);min-width:560px}
+th{font-size:11px;letter-spacing:.09em;text-transform:uppercase;text-align:left;background:var(--ink);color:var(--paper);padding:11px 13px;font-weight:600;vertical-align:bottom}
+td{padding:11px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tfoot td{background:#E3E8ED;font-weight:600;font-family:"Archivo",sans-serif}
+.num{font-family:"JetBrains Mono",monospace;white-space:nowrap}
+.sev{display:inline-block;font-family:"Archivo",sans-serif;font-size:11px;font-weight:700;padding:3px 8px;border-radius:2px;letter-spacing:.04em;white-space:nowrap}
+.sev-4{background:#2B1214;color:#FFD9DC}
+.sev-3{background:#F6D6D9;color:#8A1A22}
+.sev-2{background:var(--amber-bg);color:#6E4708}
+.sev-1{background:#E3E8ED;color:var(--ink-soft)}
+.tag-up{color:#1B7A4A;font-weight:600}
+.tag-down{color:#B8321F;font-weight:600}
+.tag-flat{color:var(--ink-soft)}
+
+.steps{list-style:none;padding:0;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding-left:56px;margin-bottom:24px}
+.steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:600;color:var(--indigo);border:1px solid var(--indigo);border-radius:2px;padding:4px 8px}
+.steps strong{font-family:"Archivo",sans-serif;display:block;font-size:16px;margin-bottom:2px}
+
+.calc{background:var(--ink);color:var(--paper);border-radius:4px;padding:28px;margin:26px 0}
+.calc h3{color:var(--white);margin-top:0}
+.calc p{color:#B9C7D3;font-size:15px}
+.calc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:18px 0}
+.calc-grid label{font-family:"JetBrains Mono",monospace;font-size:11px;color:#8FA3B4;display:block}
+.calc-grid input{width:100%;margin-top:4px;background:#22303C;border:1px solid #3D4C59;color:var(--white);font-family:"JetBrains Mono",monospace;font-size:15px;padding:8px;border-radius:3px}
+.calc button{font-family:"Archivo",sans-serif;font-weight:700;font-size:14px;background:var(--paper);color:var(--ink);border:none;padding:12px 22px;border-radius:3px;cursor:pointer}
+.calc button:hover{background:var(--white)}
+#susOut{font-family:"JetBrains Mono",monospace;font-size:15px;margin-top:16px;color:#9FE8C0;min-height:24px}
+
+footer{background:var(--ink);color:#8FA3B4;padding:44px 0;font-size:14px}
+footer p{margin:0 0 8px}
+@media(max-width:600px){
+  header{padding:44px 0 40px}
+  section{padding:40px 0}
+  .steps li{padding-left:0;padding-top:34px}
+  .steps li::before{top:0}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Interfaces Humano-Computador · Aula 06 · Avaliação da IHC</p>
+    <h1>Avaliação de interface da busca do Spotify</h1>
+    <p class="sub">Planejamento e aplicação de uma avaliação de usabilidade combinando teste com usuários reais (métricas objetivas e SUS) e inspeção heurística.</p>
+    <div class="meta">
+      <div>Sistema avaliado<span>Spotify · aplicativo móvel</span></div>
+      <div>Recorte<span>Busca e reprodução de faixa</span></div>
+      <div>Amostra válida<span>5 participantes</span></div>
+      <div>Apresentação<span>26/08/2026</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="banner">
+    <strong>Nota metodológica</strong>
+    Sete pessoas responderam ao formulário. Duas respostas foram excluídas da análise: uma por se tratar de participante menor de idade, sem consentimento de responsável, e outra por questionário de satisfação (SUS) incompleto. A amostra final considerada é de <strong>5 participantes</strong>, identificados como P2, P3, P4, P5 e P6. Os nomes dos demais integrantes da equipe ainda precisam ser preenchidos abaixo.
+  </div>
+
+  <section id="equipe">
+    <p class="eyebrow">Identificação</p>
+    <h2>Equipe</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Integrante</th><th>Papel na avaliação</th></tr></thead>
+        <tbody>
+          <tr><td>Dênym Andrade Queiroz Filho</td><td>Moderador, recrutamento, inspeção heurística e análise dos dados</td></tr>
+          <tr><td><span class="ex">Nome do integrante 2</span></td><td><span class="ex">a preencher</span></td></tr>
+          <tr><td><span class="ex">Nome do integrante 3</span></td><td><span class="ex">a preencher</span></td></tr>
+          <tr><td><span class="ex">Nome do integrante 4</span></td><td><span class="ex">a preencher</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="sistema">
+    <p class="eyebrow">Escopo</p>
+    <h2>Sistema e recorte avaliado</h2>
+    <p class="lead">A avaliação não abrange o aplicativo inteiro. O recorte é a funcionalidade de busca, do toque inicial até a reprodução da faixa desejada.</p>
+    <p>O Spotify foi escolhido por ser um sistema de uso cotidiano, com alta densidade de conteúdo e uma busca que precisa lidar com ambiguidade — o mesmo termo pode retornar faixa, álbum, artista ou até mais de uma faixa com o mesmo nome. Essa ambiguidade se confirmou como o ponto central dos problemas encontrados, como mostram os resultados a seguir.</p>
+    <p>Conforme discutido na aula, a avaliação de IHC não é teste de software: não se busca defeito de implementação, e sim verificar se a interface apoia o usuário a atingir seu objetivo.</p>
+  </section>
+
+  <section id="objetivo">
+    <p class="eyebrow">Etapa 1</p>
+    <h2>Objetivo da avaliação</h2>
+    <div class="card">
+      <h3>Objetivo geral</h3>
+      <p>Avaliar a eficácia, a eficiência e a satisfação de usuários ao localizar e reproduzir uma faixa específica e um álbum recente por meio da barra de pesquisa do aplicativo Spotify.</p>
+      <h3>Objetivos específicos</h3>
+      <ul>
+        <li>Medir o tempo necessário para localizar e reproduzir uma faixa a partir de um termo de busca conhecido.</li>
+        <li>Identificar erros e caminhos alternativos percorridos até a conclusão da tarefa.</li>
+        <li>Verificar se o usuário distingue os tipos de resultado retornados (faixa, álbum, artista).</li>
+        <li>Medir a satisfação percebida e compará-la com a expectativa declarada antes do teste.</li>
+      </ul>
+    </div>
+    <p>A avaliação é de natureza <strong>somativa</strong>: aplica-se sobre um sistema funcional já publicado, verificando o atingimento de metas de usabilidade.</p>
+  </section>
+
+  <section id="tecnicas">
+    <p class="eyebrow">Etapa 2</p>
+    <h2>Técnicas selecionadas</h2>
+    <p class="lead">Foram combinadas as duas famílias de técnicas apresentadas na aula, que se diferenciam por quem decide o que constitui um problema de usabilidade.</p>
+
+    <div class="card">
+      <h3>Técnica de teste — Teste de usabilidade cronometrado</h3>
+      <p>Participantes reais executaram os dois cenários gravando a tela do próprio celular. A partir dos vídeos, foram extraídos tempo de conclusão, número de toques e número de erros por tarefa.</p>
+      <p><strong>Métrica subjetiva:</strong> <em>System Usability Scale</em> (SUS), aplicado logo após as tarefas, somado a perguntas abertas de pós-teste e à comparação com a expectativa declarada antes do teste.</p>
+    </div>
+
+    <div class="card">
+      <h3>Técnica de inspeção — Avaliação Heurística (Nielsen)</h3>
+      <p>Inspeção conduzida pelo pesquisador sobre as mesmas telas envolvidas nas tarefas, com apoio direto nos relatos abertos e nos padrões de erro observados nos vídeos dos participantes — que funcionaram como evidência complementar de onde a interação se rompe.</p>
+    </div>
+
+    <h3>Por que combinar as duas</h3>
+    <p>O teste com usuários revela o que realmente acontece na interação, com custo maior de planejamento. A inspeção é mais econômica e ajuda a nomear, em termos de heurísticas de usabilidade, por que os problemas observados no teste acontecem.</p>
+  </section>
+
+  <section id="planejamento">
+    <p class="eyebrow">Etapa 3</p>
+    <h2>Planejamento do teste</h2>
+
+    <ol class="steps">
+      <li><strong>Definição da população-alvo</strong>Pessoas com acesso a smartphone, sem restrição de experiência prévia com o Spotify — critério ajustado durante o recrutamento diante da dificuldade de encontrar pessoas de primeiro contato com o aplicativo.</li>
+      <li><strong>Recrutamento</strong>Convite direto por WhatsApp, sem recompensa financeira, preservando a liberdade do consentimento.</li>
+      <li><strong>Número de participantes</strong>7 pessoas responderam; 5 compuseram a amostra válida após os critérios de exclusão. A aula alerta que o número cinco é tratado como mito no campo — aqui ele resultou da restrição real de tempo e recrutamento, não de uma meta metodológica.</li>
+      <li><strong>Questões éticas</strong>Termo de consentimento livre e esclarecido antes da coleta, conforme a Resolução CNS nº 510/2016. Participação voluntária, dados identificados apenas por código (P2 a P6), gravação restrita à tela do aparelho.</li>
+      <li><strong>Definição dos cenários</strong>Duas tarefas curtas, redigidas como situação e não como instrução de interface.</li>
+      <li><strong>Coleta remota</strong>Execução assíncrona: cada participante gravou a tela do próprio celular ao realizar as tarefas e enviou o vídeo, respondendo em seguida ao formulário de perfil, expectativa, SUS e pós-teste.</li>
+    </ol>
+
+    <h3>Cenários de teste</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th style="width:70px">Tarefa</th><th>Cenário apresentado ao participante</th><th style="width:120px">Caminho ideal</th></tr></thead>
+        <tbody>
+          <tr><td class="num">T1</td><td>Você ouviu uma música em uma festa e descobriu que o nome dela é "Evidências". Faça essa música tocar agora no aplicativo.</td><td class="num">4 toques</td></tr>
+          <tr><td class="num">T2</td><td>Um amigo recomendou o álbum mais recente de um artista de sua preferência. Encontre esse álbum e comece a ouvir a partir da primeira faixa.</td><td class="num">5 toques</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="objetivas">
+    <p class="eyebrow">Resultados · Métricas objetivas</p>
+    <h2>Desempenho por participante</h2>
+    <p class="lead">Tempo, número de toques e erros extraídos das gravações de tela de cada participante (N=5).</p>
+
+    <div class="gauge">
+      <div class="gauge-head"><span class="gauge-label">Tempo médio — Tarefa 1</span><span class="gauge-val">30,0 s</span></div>
+      <div class="rule"><div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="fill" style="width:50%"></div><div class="needle" style="left:50%"></div></div>
+      <div class="gauge-foot"><span>0 s</span><span>30 s</span><span>60 s</span></div>
+    </div>
+    <div class="gauge">
+      <div class="gauge-head"><span class="gauge-label">Tempo médio — Tarefa 2</span><span class="gauge-val">27,2 s</span></div>
+      <div class="rule"><div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="fill" style="width:45.3%"></div><div class="needle" style="left:45.3%"></div></div>
+      <div class="gauge-foot"><span>0 s</span><span>30 s</span><span>60 s</span></div>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th rowspan="2">Part.</th><th colspan="3">Tarefa 1</th><th colspan="3">Tarefa 2</th></tr>
+          <tr><th>Tempo</th><th>Toques</th><th>Erros</th><th>Tempo</th><th>Toques</th><th>Erros</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="num">P3</td><td class="num">22 s</td><td class="num">7</td><td class="num">1</td><td class="num">10 s</td><td class="num">5</td><td class="num">0</td></tr>
+          <tr><td class="num">P6</td><td class="num">45 s</td><td class="num">14</td><td class="num">3</td><td class="num">25 s</td><td class="num">8</td><td class="num">1</td></tr>
+          <tr><td class="num">P4</td><td class="num">15 s</td><td class="num">4</td><td class="num">0</td><td class="num">52 s</td><td class="num">15</td><td class="num">3</td></tr>
+          <tr><td class="num">P5</td><td class="num">30 s</td><td class="num">9</td><td class="num">2</td><td class="num">14 s</td><td class="num">6</td><td class="num">0</td></tr>
+          <tr><td class="num">P2</td><td class="num">38 s</td><td class="num">11</td><td class="num">2</td><td class="num">35 s</td><td class="num">10</td><td class="num">2</td></tr>
+        </tbody>
+        <tfoot><tr><td>Média</td><td class="num">30,0 s</td><td class="num">9,0</td><td class="num">1,6</td><td class="num">27,2 s</td><td class="num">8,8</td><td class="num">1,2</td></tr></tfoot>
+      </table>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Indicador</th><th>Tarefa 1</th><th>Tarefa 2</th></tr></thead>
+        <tbody>
+          <tr><td>Taxa de sucesso (autorrelatada)</td><td class="num">100% (5/5)</td><td class="num">100% (5/5)</td></tr>
+          <tr><td>Desvio médio sobre o caminho ideal</td><td class="num">+125%</td><td class="num">+76%</td></tr>
+          <tr><td>Participantes com ao menos um erro</td><td class="num">4/5</td><td class="num">3/5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Todos concluíram as duas tarefas, mas com bastante desvio do caminho ideal. O dado mais revelador não está na média: está na variação entre participantes — um mesmo participante teve o melhor desempenho do grupo em uma tarefa e o pior na outra, como a discussão detalha adiante.</p>
+  </section>
+
+  <section id="subjetivas">
+    <p class="eyebrow">Resultados · Métricas subjetivas</p>
+    <h2>Satisfação percebida (SUS)</h2>
+    <p class="lead">O <em>System Usability Scale</em> produz um índice de 0 a 100. A referência amplamente adotada é 68: abaixo disso, a usabilidade percebida é considerada inferior à média.</p>
+
+    <div class="gauge">
+      <div class="gauge-head"><span class="gauge-label">Pontuação SUS média</span><span class="gauge-val">82,0</span></div>
+      <div class="rule"><div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="fill" style="width:82%"></div><div class="needle" style="left:82%"></div><div class="threshold" style="left:68%" title="Referência: 68"></div></div>
+      <div class="gauge-foot"><span>0</span><span>referência 68</span><span>100</span></div>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Participante</th><th>SUS</th><th>Expectativa (pré)</th><th>Avaliação (pós)</th><th>Variação</th></tr></thead>
+        <tbody>
+          <tr><td class="num">P3</td><td class="num">87,5</td><td class="num">4</td><td class="num">5</td><td class="tag-up">alta</td></tr>
+          <tr><td class="num">P6</td><td class="num">82,5</td><td class="num">5</td><td class="num">5</td><td class="tag-flat">estável</td></tr>
+          <tr><td class="num">P4</td><td class="num">60,0</td><td class="num">5</td><td class="num">4</td><td class="tag-down">queda</td></tr>
+          <tr><td class="num">P5</td><td class="num">100,0</td><td class="num">5</td><td class="num">5</td><td class="tag-flat">estável</td></tr>
+          <tr><td class="num">P2</td><td class="num">80,0</td><td class="num">4</td><td class="num">5</td><td class="tag-up">alta</td></tr>
+        </tbody>
+        <tfoot><tr><td>Média</td><td class="num">82,0</td><td class="num">4,6</td><td class="num">4,8</td><td>—</td></tr></tfoot>
+      </table>
+    </div>
+
+    <p>P4 é o único caso de queda na comparação entre expectativa e avaliação, e é também o participante com o menor SUS do grupo e o pior desempenho objetivo na Tarefa 2 — os três indicadores convergem para a mesma pessoa e o mesmo ponto de fricção.</p>
+
+    <div class="calc">
+      <h3>Calculadora SUS</h3>
+      <p>Digite as dez respostas de um participante (1 a 5, na ordem do questionário) para conferir a pontuação.</p>
+      <div class="calc-grid" id="susGrid"></div>
+      <button type="button" id="susBtn">Calcular pontuação</button>
+      <div id="susOut" role="status" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="heuristica">
+    <p class="eyebrow">Resultados · Inspeção</p>
+    <h2>Achados da avaliação heurística</h2>
+    <p class="lead">Inspeção conduzida pelo pesquisador, ancorada nos relatos abertos dos participantes e nos padrões de erro identificados nas gravações — não em suposição, mas em evidência direta coletada no teste.</p>
+
+    <div class="scroll">
+      <table>
+        <thead><tr><th style="width:52px">#</th><th>Problema identificado</th><th>Heurística violada</th><th style="width:78px">Evidência</th><th style="width:96px">Severidade</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="num">01</td>
+            <td>A busca não distingue com clareza faixas homônimas de artistas diferentes nem separa faixa de álbum com o mesmo nome, levando o usuário a hesitar ou abrir o item errado.</td>
+            <td>Reconhecimento em vez de memorização</td>
+            <td class="num">P6, P3</td>
+            <td><span class="sev sev-3">Alta</span></td>
+          </tr>
+          <tr>
+            <td class="num">02</td>
+            <td>Na página do artista, a discografia não indica com destaque qual lançamento é o mais recente, obrigando o usuário a entrar e sair de vários álbuns até descobrir a data.</td>
+            <td>Reconhecimento em vez de memorização</td>
+            <td class="num">P4</td>
+            <td><span class="sev sev-4">Crítica</span></td>
+          </tr>
+          <tr>
+            <td class="num">03</td>
+            <td>O estado do embaralhar (shuffle) persiste de uma sessão para outra sem qualquer aviso, fazendo a reprodução do álbum começar por uma faixa aleatória em vez da primeira.</td>
+            <td>Visibilidade do estado do sistema</td>
+            <td class="num">P4</td>
+            <td><span class="sev sev-3">Alta</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quote">“Descobrir qual foi a música específica de acordo com o comando da tarefa, já que existiam mais de uma música nomeada 'Evidências'.”<cite>P6 — o que gerou mais dúvida durante as tarefas</cite></div>
+    <div class="quote">“A seção de discografia mostra os lançamentos numa fileira horizontal e não deixa claro qual é o mais novo (...) Só quando entrei em um dos álbuns é que vi o ano embaixo do nome.”<cite>P4 — relato da experiência na Tarefa 2</cite></div>
+
+    <h3>Decisão de custo-benefício</h3>
+    <p>Os achados 02 e 03 explicam, em conjunto, por que a Tarefa 2 teve maior desvio do caminho ideal para metade do grupo mesmo com sucesso final de 100%: o usuário chega ao objetivo, mas por um caminho mais longo e inseguro do que deveria. Ambos são de correção prioritária. O achado 01, de visibilidade mais ampla, é de correção prioritária pelo alcance, ainda que a severidade por ocorrência seja menor.</p>
+  </section>
+
+  <section id="discussao">
+    <p class="eyebrow">Etapa 4</p>
+    <h2>Discussão e reflexão</h2>
+
+    <h3>Resultados obtidos</h3>
+    <p>A amostra completou as duas tarefas integralmente, e o SUS médio de 82,0 ficou bem acima da referência de 68 — indicando usabilidade percebida como boa. A leitura mais interessante, porém, não está na média: está no contraste entre indicadores dentro de um mesmo participante. P4 obteve o melhor desempenho do grupo na Tarefa 1 (15 s, zero erros) e o pior na Tarefa 2 (52 s, 15 toques, 3 erros) — foi também quem deu a menor nota SUS (60) e o único caso de queda entre a expectativa declarada antes do teste e a avaliação feita depois.</p>
+    <p>Os três sinais apontam para o mesmo ponto: a busca direta por nome funciona bem, mas a navegação até um álbum específico dentro da página do artista é onde a interface efetivamente falha. A inspeção heurística, apoiada no relato do próprio P4 e na observação de P6 sobre faixas homônimas, converge para o mesmo diagnóstico.</p>
+
+    <h3>Desafios enfrentados no planejamento</h3>
+    <ul>
+      <li><strong>Recrutamento de perfil de primeiro contato.</strong> Foi difícil encontrar pessoas que nunca tivessem usado o Spotify; o critério precisou ser flexibilizado durante a coleta, o que também acabou revelando algo relevante: mesmo usuários frequentes do aplicativo (a maioria da amostra usa há mais de um ano) enfrentaram dificuldade real na Tarefa 2.</li>
+      <li><strong>Coleta assíncrona sem supervisão direta.</strong> Sem um moderador presente durante a gravação, não havia como intervir se algo saísse do combinado; em compensação, o participante ficou mais à vontade, sem alguém observando ao vivo.</li>
+      <li><strong>Consentimento e exclusão de dados.</strong> Uma resposta precisou ser descartada por vir de participante menor de idade, o que exigiu revisão cuidadosa de cada envio antes da análise — e reforçou a importância de verificar o perfil logo na entrada do formulário.</li>
+      <li><strong>Dados incompletos.</strong> Um questionário SUS ficou com um item em branco, o que impediu o cálculo da pontuação daquele participante e reduziu a amostra final.</li>
+    </ul>
+
+    <h3>Como as métricas se complementaram</h3>
+    <p>As métricas objetivas mostram <em>o que</em> aconteceu e <em>quanto</em>: tempo, toques e erros. As subjetivas explicam <em>por quê</em>. Isoladas, nenhuma das duas contaria a história inteira — a taxa de sucesso de 100% nas duas tarefas, sozinha, sugeriria uma interface sem problemas relevantes, escondendo o desvio de mais de 100% sobre o caminho ideal na Tarefa 1.</p>
+    <p>O caso de P4 é o exemplo mais claro de complementaridade: os números por si só mostrariam apenas um pico isolado de tempo e erros na Tarefa 2. A resposta aberta do próprio participante é o que explica a causa — a discografia sem indicação de data e o embaralhar que ficou ligado sem aviso — informação que nenhum cronômetro captaria sozinho.</p>
+  </section>
+
+  <section id="limitacoes">
+    <p class="eyebrow">Validade</p>
+    <h2>Limitações do estudo</h2>
+    <ul>
+      <li>Amostra reduzida (N=5), resultado da restrição de tempo e do recrutamento, e não de um cálculo estatístico — o próprio número cinco, alertado na aula como mito, aqui reflete apenas o que foi possível coletar no prazo.</li>
+      <li>Uma resposta foi excluída por se tratar de participante menor de idade, sem consentimento de responsável.</li>
+      <li>Uma resposta foi excluída por questionário SUS incompleto, o que impediu o cálculo da pontuação daquele participante.</li>
+      <li>Coleta remota e assíncrona, sem moderador presente durante a execução das tarefas — reduz o controle sobre eventuais distrações do ambiente de cada participante.</li>
+      <li>Maioria dos participantes já é usuária frequente do Spotify (mais de um ano de uso), o que não corresponde ao perfil de primeiro contato originalmente desejado.</li>
+    </ul>
+  </section>
+
+  <section id="referencias">
+    <p class="eyebrow">Fontes</p>
+    <h2>Referências</h2>
+    <ul>
+      <li>Videoaula "Interfaces Humano-Computador — Aula 06: Avaliação da IHC".</li>
+      <li>Capítulo 5 — Avaliação da Interface Humano/Computador, p. 101 em diante. <span class="ex">[completar referência bibliográfica do livro disponibilizado no mural]</span></li>
+      <li>NIELSEN, J. Heurísticas de usabilidade para design de interface.</li>
+      <li>BROOKE, J. SUS: a quick and dirty usability scale.</li>
+      <li>BRASIL. Conselho Nacional de Saúde. Resolução nº 510, de 7 de abril de 2016.</li>
+    </ul>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Disciplina de Interfaces Humano-Computador — Aula 06: Avaliação da IHC</p>
+    <p>Instituto Federal de Roraima · Campus Boa Vista · 2026</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var grid = document.getElementById('susGrid');
+  for (var i = 1; i <= 10; i++) {
+    var l = document.createElement('label');
+    l.textContent = 'Item ' + String(i).padStart(2,'0');
+    var inp = document.createElement('input');
+    inp.type = 'number'; inp.min = '1'; inp.max = '5';
+    inp.setAttribute('aria-label', 'Resposta do item ' + i);
+    inp.dataset.idx = i;
+    l.appendChild(inp);
+    grid.appendChild(l);
+  }
+  document.getElementById('susBtn').addEventListener('click', function(){
+    var inputs = grid.querySelectorAll('input');
+    var total = 0, ok = true;
+    inputs.forEach(function(inp){
+      var v = parseInt(inp.value, 10);
+      if (isNaN(v) || v < 1 || v > 5) { ok = false; return; }
+      var idx = parseInt(inp.dataset.idx, 10);
+      total += (idx % 2 === 1) ? (v - 1) : (5 - v);
+    });
+    var out = document.getElementById('susOut');
+    if (!ok) { out.textContent = 'Preencha os dez itens com valores de 1 a 5.'; return; }
+    var score = total * 2.5;
+    var nota = score >= 68 ? 'acima da referência de 68' : 'abaixo da referência de 68';
+    out.textContent = 'Pontuação SUS: ' + score.toFixed(1) + ' — ' + nota + '.';
+  });
+})();
+</script>
+</body>
+</html>
