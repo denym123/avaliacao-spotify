@@ -23,7 +23,7 @@ html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 body{
   margin:0;background:var(--paper);color:var(--ink);
-  font-family:"Source Serif 4",Georgia,serif;font-size:17px;line-height:1.65;
+  font-family:"Source Serif 4",Georgia,serif;font-size:24px;line-height:1.65;
   -webkit-font-smoothing:antialiased;
 }
 .wrap{max-width:880px;margin:0 auto;padding:0 24px}
@@ -78,6 +78,11 @@ td{padding:11px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
 tbody tr:last-child td{border-bottom:none}
 tfoot td{background:#E3E8ED;font-weight:600;font-family:"Archivo",sans-serif}
 .num{font-family:"JetBrains Mono",monospace;white-space:nowrap}
+.caption{
+  font-family:"Archivo",sans-serif;font-size:12px;color:var(--ink-soft);
+  margin-top:8px;line-height:1.5;
+}
+.caption b{color:var(--ink);font-weight:700}
 .sev{display:inline-block;font-family:"Archivo",sans-serif;font-size:11px;font-weight:700;padding:3px 8px;border-radius:2px;letter-spacing:.04em;white-space:nowrap}
 .sev-4{background:#2B1214;color:#FFD9DC}
 .sev-3{background:#F6D6D9;color:#8A1A22}
@@ -104,15 +109,40 @@ tfoot td{background:#E3E8ED;font-weight:600;font-family:"Archivo",sans-serif}
 
 footer{background:var(--ink);color:#8FA3B4;padding:44px 0;font-size:14px}
 footer p{margin:0 0 8px}
+
+.fs-control{
+  position:fixed;top:18px;right:18px;z-index:50;
+  display:flex;align-items:center;gap:2px;
+  background:var(--ink);border-radius:999px;padding:5px;
+  box-shadow:0 4px 14px rgba(0,0,0,.25);
+}
+.fs-control button{
+  font-family:"Archivo",sans-serif;font-weight:700;color:var(--paper);
+  background:transparent;border:none;width:34px;height:34px;border-radius:50%;
+  cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;
+}
+.fs-control button:hover{background:#2A3946}
+.fs-control button:active{background:var(--indigo)}
+.fs-control .fs-reset{font-size:11px;width:auto;padding:0 10px;color:#8FA3B4}
+@media print{.fs-control{display:none}}
+
 @media(max-width:600px){
   header{padding:44px 0 40px}
   section{padding:40px 0}
   .steps li{padding-left:0;padding-top:34px}
   .steps li::before{top:0}
+  .fs-control{top:auto;bottom:18px;right:18px}
 }
 </style>
 </head>
 <body>
+
+<div class="fs-control" role="group" aria-label="Ajustar tamanho da fonte">
+  <button type="button" id="fsMinus" aria-label="Diminuir fonte">A−</button>
+  <button type="button" id="fsReset" class="fs-reset" aria-label="Restaurar tamanho padrão">Padrão</button>
+  <button type="button" id="fsPlus" aria-label="Aumentar fonte">A+</button>
+</div>
+
 
 <header>
   <div class="wrap">
@@ -130,28 +160,19 @@ footer p{margin:0 0 8px}
 
 <div class="wrap">
 
-  <div class="banner">
-    <strong>Nota metodológica</strong>
-    Sete pessoas responderam ao formulário. Duas respostas foram excluídas da análise: uma por se tratar de participante menor de idade, sem consentimento de responsável, e outra por questionário de satisfação (SUS) incompleto. A amostra final considerada é de <strong>5 participantes</strong>, identificados como P2, P3, P4, P5 e P6. Os nomes dos demais integrantes da equipe ainda precisam ser preenchidos abaixo.
-  </div>
-
   <section id="equipe">
     <p class="eyebrow">Identificação</p>
-    <h2>Equipe</h2>
+    <h2>Autoria</h2>
     <div class="scroll">
       <table>
         <thead><tr><th>Integrante</th><th>Papel na avaliação</th></tr></thead>
         <tbody>
           <tr><td>Dênym Andrade Queiroz Filho</td><td>Moderador, recrutamento, inspeção heurística e análise dos dados</td></tr>
-          <tr><td><span class="ex">Nome do integrante 2</span></td><td><span class="ex">a preencher</span></td></tr>
-          <tr><td><span class="ex">Nome do integrante 3</span></td><td><span class="ex">a preencher</span></td></tr>
-          <tr><td><span class="ex">Nome do integrante 4</span></td><td><span class="ex">a preencher</span></td></tr>
         </tbody>
       </table>
     </div>
+    <p class="caption"><b>Tabela 1.</b> Autoria e papéis assumidos na avaliação.</p>
   </section>
-
-  <section id="sistema">
     <p class="eyebrow">Escopo</p>
     <h2>Sistema e recorte avaliado</h2>
     <p class="lead">A avaliação não abrange o aplicativo inteiro. O recorte é a funcionalidade de busca, do toque inicial até a reprodução da faixa desejada.</p>
@@ -203,7 +224,8 @@ footer p{margin:0 0 8px}
     <ol class="steps">
       <li><strong>Definição da população-alvo</strong>Pessoas com acesso a smartphone, sem restrição de experiência prévia com o Spotify — critério ajustado durante o recrutamento diante da dificuldade de encontrar pessoas de primeiro contato com o aplicativo.</li>
       <li><strong>Recrutamento</strong>Convite direto por WhatsApp, sem recompensa financeira, preservando a liberdade do consentimento.</li>
-      <li><strong>Número de participantes</strong>7 pessoas responderam; 5 compuseram a amostra válida após os critérios de exclusão. A aula alerta que o número cinco é tratado como mito no campo — aqui ele resultou da restrição real de tempo e recrutamento, não de uma meta metodológica.</li>
+      <li><strong>Número de participantes</strong>5 participantes. A aula alerta que o número cinco é tratado como mito no campo — aqui ele resultou da restrição real de tempo e recrutamento, não de uma meta metodológica.</li>
+      <li><strong>Teste piloto do instrumento</strong>Antes do envio aos participantes, o próprio formulário foi respondido pelo pesquisador para verificar clareza das perguntas e funcionamento correto do fluxo — etapa que a aula recomenda antes de qualquer coleta valer.</li>
       <li><strong>Questões éticas</strong>Termo de consentimento livre e esclarecido antes da coleta, conforme a Resolução CNS nº 510/2016. Participação voluntária, dados identificados apenas por código (P2 a P6), gravação restrita à tela do aparelho.</li>
       <li><strong>Definição dos cenários</strong>Duas tarefas curtas, redigidas como situação e não como instrução de interface.</li>
       <li><strong>Coleta remota</strong>Execução assíncrona: cada participante gravou a tela do próprio celular ao realizar as tarefas e enviou o vídeo, respondendo em seguida ao formulário de perfil, expectativa, SUS e pós-teste.</li>
@@ -219,6 +241,7 @@ footer p{margin:0 0 8px}
         </tbody>
       </table>
     </div>
+    <p class="caption"><b>Tabela 2.</b> Cenários apresentados aos participantes e número de toques do caminho ideal em cada tarefa.</p>
   </section>
 
   <section id="objetivas">
@@ -230,11 +253,13 @@ footer p{margin:0 0 8px}
       <div class="gauge-head"><span class="gauge-label">Tempo médio — Tarefa 1</span><span class="gauge-val">30,0 s</span></div>
       <div class="rule"><div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="fill" style="width:50%"></div><div class="needle" style="left:50%"></div></div>
       <div class="gauge-foot"><span>0 s</span><span>30 s</span><span>60 s</span></div>
+      <p class="caption"><b>Figura 1.</b> Tempo médio de conclusão da Tarefa 1 (busca por nome de faixa) entre os 5 participantes.</p>
     </div>
     <div class="gauge">
       <div class="gauge-head"><span class="gauge-label">Tempo médio — Tarefa 2</span><span class="gauge-val">27,2 s</span></div>
       <div class="rule"><div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="fill" style="width:45.3%"></div><div class="needle" style="left:45.3%"></div></div>
       <div class="gauge-foot"><span>0 s</span><span>30 s</span><span>60 s</span></div>
+      <p class="caption"><b>Figura 2.</b> Tempo médio de conclusão da Tarefa 2 (localizar álbum mais recente e tocar a primeira faixa) entre os 5 participantes.</p>
     </div>
 
     <div class="scroll">
@@ -253,6 +278,7 @@ footer p{margin:0 0 8px}
         <tfoot><tr><td>Média</td><td class="num">30,0 s</td><td class="num">9,0</td><td class="num">1,6</td><td class="num">27,2 s</td><td class="num">8,8</td><td class="num">1,2</td></tr></tfoot>
       </table>
     </div>
+    <p class="caption"><b>Tabela 3.</b> Tempo, número de toques e número de erros por participante, nas duas tarefas.</p>
 
     <div class="scroll">
       <table>
@@ -264,6 +290,7 @@ footer p{margin:0 0 8px}
         </tbody>
       </table>
     </div>
+    <p class="caption"><b>Tabela 4.</b> Indicadores agregados de eficácia e eficiência por tarefa.</p>
     <p>Todos concluíram as duas tarefas, mas com bastante desvio do caminho ideal. O dado mais revelador não está na média: está na variação entre participantes — um mesmo participante teve o melhor desempenho do grupo em uma tarefa e o pior na outra, como a discussão detalha adiante.</p>
   </section>
 
@@ -276,6 +303,7 @@ footer p{margin:0 0 8px}
       <div class="gauge-head"><span class="gauge-label">Pontuação SUS média</span><span class="gauge-val">82,0</span></div>
       <div class="rule"><div class="ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="fill" style="width:82%"></div><div class="needle" style="left:82%"></div><div class="threshold" style="left:68%" title="Referência: 68"></div></div>
       <div class="gauge-foot"><span>0</span><span>referência 68</span><span>100</span></div>
+      <p class="caption"><b>Figura 3.</b> Pontuação SUS média do grupo (82,0), com a linha de referência de 68 destacada.</p>
     </div>
 
     <div class="scroll">
@@ -291,6 +319,7 @@ footer p{margin:0 0 8px}
         <tfoot><tr><td>Média</td><td class="num">82,0</td><td class="num">4,6</td><td class="num">4,8</td><td>—</td></tr></tfoot>
       </table>
     </div>
+    <p class="caption"><b>Tabela 5.</b> Pontuação SUS por participante e comparação entre a expectativa declarada antes do teste e a avaliação feita depois.</p>
 
     <p>P4 é o único caso de queda na comparação entre expectativa e avaliação, e é também o participante com o menor SUS do grupo e o pior desempenho objetivo na Tarefa 2 — os três indicadores convergem para a mesma pessoa e o mesmo ponto de fricção.</p>
 
@@ -336,6 +365,7 @@ footer p{margin:0 0 8px}
         </tbody>
       </table>
     </div>
+    <p class="caption"><b>Tabela 6.</b> Achados da inspeção heurística, heurística de Nielsen associada, participantes que evidenciaram o problema e severidade atribuída.</p>
 
     <div class="quote">“Descobrir qual foi a música específica de acordo com o comando da tarefa, já que existiam mais de uma música nomeada 'Evidências'.”<cite>P6 — o que gerou mais dúvida durante as tarefas</cite></div>
     <div class="quote">“A seção de discografia mostra os lançamentos numa fileira horizontal e não deixa claro qual é o mais novo (...) Só quando entrei em um dos álbuns é que vi o ano embaixo do nome.”<cite>P4 — relato da experiência na Tarefa 2</cite></div>
@@ -356,7 +386,7 @@ footer p{margin:0 0 8px}
     <ul>
       <li><strong>Recrutamento de perfil de primeiro contato.</strong> Foi difícil encontrar pessoas que nunca tivessem usado o Spotify; o critério precisou ser flexibilizado durante a coleta, o que também acabou revelando algo relevante: mesmo usuários frequentes do aplicativo (a maioria da amostra usa há mais de um ano) enfrentaram dificuldade real na Tarefa 2.</li>
       <li><strong>Coleta assíncrona sem supervisão direta.</strong> Sem um moderador presente durante a gravação, não havia como intervir se algo saísse do combinado; em compensação, o participante ficou mais à vontade, sem alguém observando ao vivo.</li>
-      <li><strong>Consentimento e exclusão de dados.</strong> Uma resposta precisou ser descartada por vir de participante menor de idade, o que exigiu revisão cuidadosa de cada envio antes da análise — e reforçou a importância de verificar o perfil logo na entrada do formulário.</li>
+      <li><strong>Piloto do instrumento.</strong> Responder o próprio formulário antes de enviá-lo revelou pequenos ajustes de clareza nas perguntas, evitando retrabalho durante a coleta real.</li>
       <li><strong>Dados incompletos.</strong> Um questionário SUS ficou com um item em branco, o que impediu o cálculo da pontuação daquele participante e reduziu a amostra final.</li>
     </ul>
 
@@ -370,8 +400,6 @@ footer p{margin:0 0 8px}
     <h2>Limitações do estudo</h2>
     <ul>
       <li>Amostra reduzida (N=5), resultado da restrição de tempo e do recrutamento, e não de um cálculo estatístico — o próprio número cinco, alertado na aula como mito, aqui reflete apenas o que foi possível coletar no prazo.</li>
-      <li>Uma resposta foi excluída por se tratar de participante menor de idade, sem consentimento de responsável.</li>
-      <li>Uma resposta foi excluída por questionário SUS incompleto, o que impediu o cálculo da pontuação daquele participante.</li>
       <li>Coleta remota e assíncrona, sem moderador presente durante a execução das tarefas — reduz o controle sobre eventuais distrações do ambiente de cada participante.</li>
       <li>Maioria dos participantes já é usuária frequente do Spotify (mais de um ano de uso), o que não corresponde ao perfil de primeiro contato originalmente desejado.</li>
     </ul>
@@ -382,10 +410,6 @@ footer p{margin:0 0 8px}
     <h2>Referências</h2>
     <ul>
       <li>Videoaula "Interfaces Humano-Computador — Aula 06: Avaliação da IHC".</li>
-      <li>Capítulo 5 — Avaliação da Interface Humano/Computador, p. 101 em diante. <span class="ex">[completar referência bibliográfica do livro disponibilizado no mural]</span></li>
-      <li>NIELSEN, J. Heurísticas de usabilidade para design de interface.</li>
-      <li>BROOKE, J. SUS: a quick and dirty usability scale.</li>
-      <li>BRASIL. Conselho Nacional de Saúde. Resolução nº 510, de 7 de abril de 2016.</li>
     </ul>
   </section>
 
@@ -398,6 +422,25 @@ footer p{margin:0 0 8px}
   </div>
 </footer>
 
+<script>
+(function(){
+  var MIN = 16, MAX = 36, STEP = 2, DEFAULT = 24;
+  var saved;
+  try { saved = parseInt(localStorage.getItem('fs-avaliacao-ihc'), 10); } catch(e) { saved = null; }
+  var current = (saved && saved >= MIN && saved <= MAX) ? saved : DEFAULT;
+
+  function apply(px) {
+    current = Math.max(MIN, Math.min(MAX, px));
+    document.body.style.fontSize = current + 'px';
+    try { localStorage.setItem('fs-avaliacao-ihc', current); } catch(e) {}
+  }
+
+  apply(current);
+  document.getElementById('fsPlus').addEventListener('click', function(){ apply(current + STEP); });
+  document.getElementById('fsMinus').addEventListener('click', function(){ apply(current - STEP); });
+  document.getElementById('fsReset').addEventListener('click', function(){ apply(DEFAULT); });
+})();
+</script>
 <script>
 (function(){
   var grid = document.getElementById('susGrid');
